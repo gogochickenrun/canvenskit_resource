@@ -250,7 +250,7 @@ _flutter.loader = null;
      * Returns undefined when an `onEntrypointLoaded` callback is supplied in `options`.
      */
     async loadEntrypoint(options) {
-      const { entrypointUrl = 'https://gogochickenrun.github.io/flutter_cavensKit/main.dart.js', onEntrypointLoaded } =
+      const { entrypointUrl = 'https://gogochickenrun.github.io/canvenskit_resource/main.dart.js', onEntrypointLoaded } =
         options || {};
 
       return this._loadEntrypoint(entrypointUrl, onEntrypointLoaded);
