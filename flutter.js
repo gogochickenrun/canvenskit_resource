@@ -1,3 +1,4 @@
+
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -72,7 +73,8 @@ _flutter.loader = null;
      */
     constructor(validPatterns, policyName = "flutter-js") {
       const patterns = validPatterns || [
-        /\.js$/,
+        /\.dart\.js$/,
+        /^flutter_service_worker.js$/
       ];
       if (window.trustedTypes) {
         this.policy = trustedTypes.createPolicy(policyName, {
@@ -115,19 +117,10 @@ _flutter.loader = null;
      * @returns {Promise} that resolves when the latest serviceWorker is ready.
      */
     loadServiceWorker(settings) {
-      if (settings == null) {
+      if (!("serviceWorker" in navigator) || settings == null) {
         // In the future, settings = null -> uninstall service worker?
-        console.debug("Null serviceWorker configuration. Skipping.");
-        return Promise.resolve();
-      }
-      if (!("serviceWorker" in navigator)) {
-        let errorMessage = "Service Worker API unavailable.";
-        if (!window.isSecureContext) {
-          errorMessage += "\nThe current context is NOT secure."
-          errorMessage += "\nRead more: https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts";
-        }
         return Promise.reject(
-          new Error(errorMessage)
+          new Error("Service worker not supported (or configured).")
         );
       }
       const {
@@ -250,7 +243,7 @@ _flutter.loader = null;
      * Returns undefined when an `onEntrypointLoaded` callback is supplied in `options`.
      */
     async loadEntrypoint(options) {
-      const { entrypointUrl = 'https://gogochickenrun.github.io/canvenskit_resource/main.dart.js', onEntrypointLoaded } =
+      const { entrypointUrl = `${baseUri}main.dart.js`, onEntrypointLoaded } =
         options || {};
 
       return this._loadEntrypoint(entrypointUrl, onEntrypointLoaded);
@@ -381,3 +374,4 @@ _flutter.loader = null;
 
   _flutter.loader = new FlutterLoader();
 })();
+
